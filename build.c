@@ -265,6 +265,7 @@ Tnode *Build_Tree_From_File(char *filename, int *INFOR2)
     if (fp == NULL)
     {
         fclose(fp);
+        *INFOR2 = -1;
         return NULL;
     }
 

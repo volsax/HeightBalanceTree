@@ -28,11 +28,13 @@ int main(int argc, char *argv[]){
         if(root == NULL && INFOR == 0){
             fileCheck = -1;
             printf("Input file Error\n");
+            fprintf(stdout, "%d,%d,%d\n", fileCheck, isBST, isHB);
             return EXIT_FAILURE;
         }
         else if(INFOR == 1){
             fileCheck = 0;
             printf("Input format incorrect\n");
+            fprintf(stdout, "%d,%d,%d\n", fileCheck, isBST, isHB);
             return EXIT_FAILURE;
         }
         else{
@@ -57,14 +59,14 @@ int main(int argc, char *argv[]){
         return EXIT_SUCCESS;
     }
 
-    if(strcmp("-b", argv[1])==0){
+    else if(strcmp("-b", argv[1])==0){
         int fileCheck2;
         int INFOR2 = 0; //INFOR2 is the incorrect input format flag 
         //build the tree
         root = Build_Tree_From_File(argv[2], &INFOR2);
 
         //return EXIT_FAILURE if the file cannot be opened
-        if(root == NULL && INFOR2 == 0){
+        if(root == NULL && INFOR2 == -1){
             fileCheck2 = -1;
             fprintf(stdout, "%d\n", fileCheck2);
             return EXIT_FAILURE;
@@ -84,5 +86,10 @@ int main(int argc, char *argv[]){
         }
         //print the tree
         //Preorder2(root);
+    }
+
+    else{
+        printf("Wrong Comment!!\n");
+        return EXIT_FAILURE;
     }
 }
