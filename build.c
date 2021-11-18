@@ -130,7 +130,7 @@ static Tnode *insertion(Tnode *node, int val)
 
     //Start rotate if the tree is not balance
     //case 1 left left
-    if (balance > 1 && val < node->left->key)
+    if (balance > 1 && val <= node->left->key)
     {
         return Right_Rotate(node);
     }
@@ -149,7 +149,7 @@ static Tnode *insertion(Tnode *node, int val)
     }
 
     //case4 right left
-    if (balance < -1 && val < node->right->key)
+    if (balance < -1 && (val < node->right->key))
     {
         node->right = Right_Rotate(node->right);
         return Left_Rotate(node);
@@ -166,13 +166,13 @@ Tnode *Delete(Tnode *node, int val)
         return node;
     }
 
-    if (val <= node->key)
+    if (val < node->key)
     {
-        Delete(node->left, val);
+        node->left = Delete(node->left, val);
     }
     else if (val > node->key)
     {
-        Delete(node->right, val);
+        node->right = Delete(node->right, val);
     }
     //find the same node
     else
@@ -208,7 +208,7 @@ Tnode *Delete(Tnode *node, int val)
     }
     //If node is the only node after deletion, node = NULL
     if (node == NULL)
-        return NULL;
+        return node;
 
     //Update the height as insertion part
     int leftHeight = get_height(node->left);
@@ -226,7 +226,7 @@ Tnode *Delete(Tnode *node, int val)
 
     //Start rotate if the tree is not balance
     //case 1 left left
-    if (balance > 1 && val < node->left->key)
+    if (balance > 1 && val <= node->left->key)
     {
         return Right_Rotate(node);
     }
@@ -253,7 +253,7 @@ Tnode *Delete(Tnode *node, int val)
     return node;
 }
 
-Tnode *Build_Tree_From_File(char *filename)
+Tnode *Build_Tree_From_File(char *filename, int *INFOR2)
 {
     FILE *fp;
     char op;
@@ -290,10 +290,53 @@ Tnode *Build_Tree_From_File(char *filename)
         else
         {
             //input format incorrect
+            //return node
+            *INFOR2 = 1;
             fclose(fp);
-            return NULL;
+            return node;
         }
     }
     fclose(fp);
     return node;
 }
+
+int Preorder_Write(Tnode *node, FILE *fp, int count){
+    int op;
+    if(node != NULL){
+        count += fwrite(&node->key, sizeof(int), 1, fp);
+        if(node->right != NULL && node->left != NULL){
+            op = 3;
+            count += fwrite(&op, sizeof(char), 1, fp);
+        }
+        else if(node->right != NULL && node->left == NULL){
+            op = 1;
+            count += fwrite(&op, sizeof(char), 1, fp);
+        }
+        else if(node->right == NULL && node->left != NULL){
+            op = 2;
+            count += fwrite(&op, sizeof(char), 1, fp);
+        }
+        else{
+            op = 0;
+            count += fwrite(&op, sizeof(char), 1, fp);
+        }
+        Preorder_Write(node->left, fp, count);
+        Preorder_Write(node->right, fp, count);
+    }
+    return count;
+}
+
+int Tree_save_to_file(char *filename, Tnode *node){
+    FILE *fp;
+    int count = 0;
+
+    fp = fopen(filename, "wb");
+    if(fp == NULL){
+        fclose(fp);
+        return 0;
+    }
+    count = Preorder_Write(node, fp, count);
+    fclose(fp);
+    return count;
+}
+

@@ -4,6 +4,17 @@
 #include "hbt.h"
 #include "pa2.h"
 
+void deallocate (Tnode* node)
+{
+    if(node==NULL)
+        return;
+
+    deallocate(node->right);
+    deallocate(node->left);
+
+    free(node);
+}
+
 int main(int argc, char *argv[]){
     
     Tnode *root = NULL;
@@ -41,13 +52,36 @@ int main(int argc, char *argv[]){
         if(isHB) printf("\nIt is Height Balance\n");
         else printf("\nIt's not Height Balance\n");
         
+        fprintf(stdout, "%d,%d,%d\n", fileCheck, isBST, isHB);
+        deallocate(root); //free the tree
         return EXIT_SUCCESS;
     }
 
     if(strcmp("-b", argv[1])==0){
+        int fileCheck2;
+        int INFOR2 = 0; //INFOR2 is the incorrect input format flag 
         //build the tree
-        root = Build_Tree_From_File(argv[2]);
+        root = Build_Tree_From_File(argv[2], &INFOR2);
 
+        //return EXIT_FAILURE if the file cannot be opened
+        if(root == NULL && INFOR2 == 0){
+            fileCheck2 = -1;
+            fprintf(stdout, "%d\n", fileCheck2);
+            return EXIT_FAILURE;
+        }
+        Tree_save_to_file(argv[3], root);
+        if(INFOR2 == 1){
+            fileCheck2 = 0;
+            fprintf(stdout, "%d\n", fileCheck2);
+            deallocate(root); //free the tree
+            return EXIT_FAILURE;
+        }
+        else {
+            fileCheck2 = 1;
+            fprintf(stdout, "%d\n", fileCheck2);
+            deallocate(root); //free the tree
+            return EXIT_SUCCESS;
+        }
         //print the tree
         //Preorder2(root);
     }

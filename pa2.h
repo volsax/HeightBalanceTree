@@ -9,5 +9,6 @@ int Test_HB(Tnode *node, int *height);
 
 
 //Build part
-Tnode *Build_Tree_From_File(char *filename);
+Tnode *Build_Tree_From_File(char *filename, int *INFOR2);
 void Preorder2(Tnode *node);
+int Tree_save_to_file(char *filename, Tnode *node);
