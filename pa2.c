@@ -39,20 +39,20 @@ int main(int argc, char *argv[]){
         }
         else{
             fileCheck = 1;
-            printf("Input is good\n");
+            //printf("Input is good\n");
         }
         //print the tree
         Preorder(root);
 
         //Test BST
         isBST = Test_BST(root);
-        if(isBST) printf("\nIt is BST\n");
-        else printf("\nIt's not BST\n");
+        //if(isBST) printf("\nIt is BST\n");
+        //else printf("\nIt's not BST\n");
 
         //Test Height balance
         isHB = Test_HB(root, &height);
-        if(isHB) printf("\nIt is Height Balance\n");
-        else printf("\nIt's not Height Balance\n");
+        //if(isHB) printf("\nIt is Height Balance\n");
+        //else printf("\nIt's not Height Balance\n");
         
         fprintf(stdout, "%d,%d,%d\n", fileCheck, isBST, isHB);
         deallocate(root); //free the tree
@@ -84,12 +84,10 @@ int main(int argc, char *argv[]){
             deallocate(root); //free the tree
             return EXIT_SUCCESS;
         }
-        //print the tree
-        //Preorder2(root);
     }
 
     else{
-        printf("Wrong Comment!!\n");
+        printf("Wrong Command!!\n");
         return EXIT_FAILURE;
     }
 }

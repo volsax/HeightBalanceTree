@@ -29,33 +29,6 @@ static Tnode *get_predecessor(Tnode *node)
     return node;
 }
 
-void Preorder2(Tnode *node)
-{
-    if (node != NULL)
-    {
-        printf("%d ", node->key);
-        if (node->right != NULL && node->left != NULL)
-        {
-            printf("3\n");
-        }
-        else if (node->right != NULL && node->left == NULL)
-        {
-            printf("1\n");
-        }
-        else if (node->right == NULL && node->left != NULL)
-        {
-            printf("2\n");
-        }
-        else
-        {
-            printf("0\n");
-        }
-
-        Preorder2(node->left);
-        Preorder2(node->right);
-    }
-}
-
 static Tnode *Create_Node(int val)
 {
     Tnode *node = (Tnode *)malloc(sizeof(Tnode));
@@ -97,6 +70,15 @@ static Tnode *Left_Rotate(Tnode *old)
     return new;
 }
 
+static int get_balance(Tnode *root){
+    if(root == NULL){
+        return 0;
+    }
+    else{
+        return (get_height(root->left) - get_height(root->right));
+    }
+}
+
 static Tnode *insertion(Tnode *node, int val)
 {
     if (node == NULL)
@@ -119,37 +101,28 @@ static Tnode *insertion(Tnode *node, int val)
     int rightHeight = get_height(node->right);
     node->height = get_max(leftHeight, rightHeight) + 1;
 
-    //get the balance of the node
-    int balance;
-    if (node == NULL)
-    {
-        balance = 0;
-    }
-    else
-        balance = leftHeight - rightHeight;
-
     //Start rotate if the tree is not balance
     //case 1 left left
-    if (balance > 1 && val <= node->left->key)
+    if (get_balance(node)>1 && get_balance(node->left)>=1)
     {
         return Right_Rotate(node);
     }
 
     //case2 right right
-    if (balance < -1 && val > node->right->key)
+    else if (get_balance(node)<-1 && get_balance(node->right)<=-1)
     {
         return Left_Rotate(node);
     }
 
     //case3 left right
-    if (balance > 1 && val > node->left->key)
+    else if (get_balance(node)>1 && get_balance(node->left)<=-1)
     {
         node->left = Left_Rotate(node->left);
         return Right_Rotate(node);
     }
 
     //case4 right left
-    if (balance < -1 && (val < node->right->key))
+    else if (get_balance(node)<-1 && get_balance(node->right)>=1)
     {
         node->right = Right_Rotate(node->right);
         return Left_Rotate(node);
@@ -215,41 +188,33 @@ Tnode *Delete(Tnode *node, int val)
     int rightHeight = get_height(node->right);
     node->height = get_max(leftHeight, rightHeight) + 1;
 
-    //get the balance of the node
-    int balance;
-    if (node == NULL)
-    {
-        balance = 0;
-    }
-    else
-        balance = leftHeight - rightHeight;
-
     //Start rotate if the tree is not balance
     //case 1 left left
-    if (balance > 1 && val <= node->left->key)
+    if (get_balance(node)>1 && get_balance(node->left)>=1)
     {
         return Right_Rotate(node);
     }
 
     //case2 right right
-    if (balance < -1 && val > node->right->key)
+    else if (get_balance(node)<-1 && get_balance(node->right)<=-1)
     {
         return Left_Rotate(node);
     }
 
     //case3 left right
-    if (balance > 1 && val > node->left->key)
+    else if (get_balance(node)>1 && get_balance(node->left)<=-1)
     {
         node->left = Left_Rotate(node->left);
         return Right_Rotate(node);
     }
 
     //case4 right left
-    if (balance < -1 && val < node->right->key)
+    else if (get_balance(node)<-1 && get_balance(node->right)>=1)
     {
         node->right = Right_Rotate(node->right);
         return Left_Rotate(node);
     }
+
     return node;
 }
 
@@ -280,13 +245,11 @@ Tnode *Build_Tree_From_File(char *filename, int *INFOR2)
         {
             fprintf(stdout, "Insert %d\n", key);
             node = insertion(node, key);
-            Preorder2(node);
         }
         else if (op == 'd')
         {
             fprintf(stdout, "Delete %d\n", key);
             node = Delete(node, key);
-            Preorder2(node);
         }
         else
         {
@@ -338,6 +301,6 @@ int Tree_save_to_file(char *filename, Tnode *node){
     }
     count = Preorder_Write(node, fp, count);
     fclose(fp);
-    return count;
+    return count;  
 }
 
