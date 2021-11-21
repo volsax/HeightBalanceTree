@@ -80,7 +80,7 @@ Tnode *Tree_Load_From_File(char *filename, int *INFOR){
     //open file
     fp = fopen(filename, "rb");
     if (fp == NULL) {
-        fclose(fp);
+        //fclose(fp);
         return NULL;
     }
     
@@ -102,7 +102,6 @@ Tnode *Tree_Load_From_File(char *filename, int *INFOR){
         free(childarray);
         return NULL;
     }
-    printf("n = %d\n", intCount);
 
     while(fread(&key, sizeof(int), 1, fp)){
         //read int in the while loop : key = int
@@ -149,8 +148,8 @@ int Test_BST(Tnode *root){
     inorder(root, arr);
 
     //check if the array sorted
-    for(int i=1; i<intCount/4; i++){
-        printf("%d ", arr[i]);
+    int i;
+    for(i=1; i<intCount/4; i++){
         if(arr[i] < arr[i-1]){
             free(arr);
             return 0;

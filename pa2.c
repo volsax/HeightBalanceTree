@@ -26,33 +26,24 @@ int main(int argc, char *argv[]){
 
         //Check the input file validility
         if(root == NULL && INFOR == 0){
-            fileCheck = -1;
-            printf("Input file Error\n");
+            fileCheck = -1; //input file error
             fprintf(stdout, "%d,%d,%d\n", fileCheck, isBST, isHB);
             return EXIT_FAILURE;
         }
         else if(INFOR == 1){
-            fileCheck = 0;
-            printf("Input format incorrect\n");
+            fileCheck = 0; //input format incorrect
             fprintf(stdout, "%d,%d,%d\n", fileCheck, isBST, isHB);
             return EXIT_FAILURE;
         }
         else{
             fileCheck = 1;
-            //printf("Input is good\n");
         }
-        //print the tree
-        Preorder(root);
 
         //Test BST
         isBST = Test_BST(root);
-        //if(isBST) printf("\nIt is BST\n");
-        //else printf("\nIt's not BST\n");
 
         //Test Height balance
         isHB = Test_HB(root, &height);
-        //if(isHB) printf("\nIt is Height Balance\n");
-        //else printf("\nIt's not Height Balance\n");
         
         fprintf(stdout, "%d,%d,%d\n", fileCheck, isBST, isHB);
         deallocate(root); //free the tree

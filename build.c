@@ -229,7 +229,7 @@ Tnode *Build_Tree_From_File(char *filename, int *INFOR2)
     fp = fopen(filename, "rb");
     if (fp == NULL)
     {
-        fclose(fp);
+        //fclose(fp);
         *INFOR2 = -1;
         return NULL;
     }
@@ -243,12 +243,10 @@ Tnode *Build_Tree_From_File(char *filename, int *INFOR2)
         //start building tree
         if (op == 'i')
         {
-            fprintf(stdout, "Insert %d\n", key);
             node = insertion(node, key);
         }
         else if (op == 'd')
         {
-            fprintf(stdout, "Delete %d\n", key);
             node = Delete(node, key);
         }
         else
